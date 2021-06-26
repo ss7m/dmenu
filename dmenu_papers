@@ -8,4 +8,6 @@ paper=$(echo "${papers[*]}" | dmenu -p 'Paper:')
 
 paper=$(find "$paperdir" -name "$paper")
 
-exec zathura "$paper"
+if [ -n "$paper" ]; then
+    exec zathura "$paper"
+fi
