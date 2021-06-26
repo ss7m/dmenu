@@ -1,0 +1,11 @@
+#!/bin/bash
+
+paperdir="$HOME/Documents/Papers"
+mapfile -t papers < <(find "$paperdir" -name '*.pdf' -exec basename {} \;)
+
+IFS=$'\n'
+paper=$(echo "${papers[*]}" | dmenu -p 'Paper:')
+
+paper=$(find "$paperdir" -name "$paper")
+
+exec zathura "$paper"
