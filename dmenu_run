@@ -1,2 +1,5 @@
-#!/bin/sh
-dmenu_path | dmenu "$@" | ${SHELL:-"/bin/sh"} &
+#!/bin/bash
+
+mapfile -t -d : path <<< "$PATH"
+prog=$(stest -flx "${path[@]}" | sort -u | dmenu -p 'Run:')
+exec "$prog"

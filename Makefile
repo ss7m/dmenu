@@ -31,20 +31,10 @@ stest: stest.o
 clean:
 	rm -f dmenu stest $(OBJ) dmenu-$(VERSION).tar.gz
 
-dist: clean
-	mkdir -p dmenu-$(VERSION)
-	cp LICENSE Makefile README arg.h config.def.h config.mk dmenu.1\
-		drw.h util.h dmenu_path dmenu_run stest.1 $(SRC)\
-		dmenu-$(VERSION)
-	tar -cf dmenu-$(VERSION).tar dmenu-$(VERSION)
-	gzip dmenu-$(VERSION).tar
-	rm -rf dmenu-$(VERSION)
-
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	cp -f dmenu dmenu_path dmenu_run dmenu_man dmenu_papers stest $(DESTDIR)$(PREFIX)/bin
+	cp -f dmenu dmenu_run dmenu_man dmenu_papers stest $(DESTDIR)$(PREFIX)/bin
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu
-	chmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu_path
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu_run
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu_man
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/dmenu_papers

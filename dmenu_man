@@ -6,8 +6,6 @@ a="${manual% *}"
 b="${manual#*(}"
 b="${b%)*}"
 
-echo $manual
-
 if [ -n "$a" ] && [ -n "$b" ]; then
     exec alacritty -e man "$b" "$a"
 fi
