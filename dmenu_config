@@ -11,7 +11,7 @@ declare -A config=(
 mapfile -t scripts < <(find "$HOME"/.local/bin -not -name 'dmenu*' -type f)
 
 for file in "${scripts[@]}"; do
-    if [ "$(basename "$file")" != stest ] && rg -q '^#!/bin/' "$file"; then
+    if rg -q '^#!/bin/' "$file"; then
         config[$(basename "$file")]="$file"
     fi
 done
@@ -19,5 +19,18 @@ done
 IFS=$'\n' key="$(echo "${!config[*]}" | dmenu -p 'Config:')"
 
 if [ -n "$key" ]; then
-    exec alacritty -e nvim "${config[$key]}"
+    alacritty -e nvim "${config[$key]}"
+else
+    exit
+fi
+
+response="$(echo $'yes\nno' | dmenu -p 'Commit?')"
+
+args=("--git-dir=${HOME}/.config/dotfiles/" "--work-tree=${HOME}")
+
+if [ "$response" = yes ]; then
+    if git "${args[@]}" add "${config[$key]}"; then
+        alacritty -e git "${args[@]}" commit
+        git "${args[@]}" push -u origin master
+    fi
 fi
