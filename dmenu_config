@@ -1,0 +1,23 @@
+#!/bin/bash
+
+declare -A config=(
+    [alacritty]="$HOME"/.config/alacritty
+    [zsh]="$HOME"/.config/zsh/.zshrc
+    [vim]="$HOME"/.config/nvim/init.vim
+    [xmonad]="$HOME"/.xmonad/xmonad.hs
+    [vifm]="$HOME"/.config/vifm/vifmrc
+)
+
+mapfile -t scripts < <(find "$HOME"/.local/bin -not -name 'dmenu*')
+
+for file in "${scripts[@]}"; do
+    if [ "$(basename "$file")" != stest ] && rg -q '^#!/bin/' "$file"; then
+        config[$(basename "$file")]="$file"
+    fi
+done
+
+IFS=$'\n' key="$(echo "${!config[*]}" | dmenu -p 'Config:')"
+
+if [ -n "$key" ]; then
+    exec alacritty -e nvim "${config[$key]}"
+fi
