@@ -1,7 +1,7 @@
 #!/bin/bash
 
 declare -A config=(
-    [alacritty]="$HOME"/.config/alacritty
+    [alacritty]="$HOME"/.config/alacritty.yml
     [zsh]="$HOME"/.config/zsh/.zshrc
     [vim]="$HOME"/.config/nvim/init.vim
     [xmonad]="$HOME"/.xmonad/xmonad.hs
