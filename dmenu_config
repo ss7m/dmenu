@@ -8,7 +8,7 @@ declare -A config=(
     [vifm]="$HOME"/.config/vifm/vifmrc
 )
 
-mapfile -t scripts < <(find "$HOME"/.local/bin -not -name 'dmenu*')
+mapfile -t scripts < <(find "$HOME"/.local/bin -not -name 'dmenu*' -type f)
 
 for file in "${scripts[@]}"; do
     if [ "$(basename "$file")" != stest ] && rg -q '^#!/bin/' "$file"; then
