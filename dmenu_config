@@ -24,12 +24,17 @@ else
     exit
 fi
 
-response="$(echo $'yes\nno' | dmenu -p 'Commit?')"
+response="$(echo $'single\nall\nno' | dmenu -p 'Commit?')"
 
 args=("--git-dir=${HOME}/.config/dotfiles/" "--work-tree=${HOME}")
 
-if [ "$response" = yes ]; then
+if [ "$response" = single ]; then
     if git "${args[@]}" add "${config[$key]}"; then
+        alacritty -e git "${args[@]}" commit
+        git "${args[@]}" push -u origin master
+    fi
+elif [ "$response" = all ]; then
+    if git "${args[@]}" add -u; then
         alacritty -e git "${args[@]}" commit
         git "${args[@]}" push -u origin master
     fi
