@@ -4,8 +4,10 @@ declare -A config=(
     [alacritty]="$HOME"/.config/alacritty.yml
     [zsh]="$HOME"/.config/zsh/.zshrc
     [vim]="$HOME"/.config/nvim/init.vim
+    [nvim]="$HOME"/.config/nvim/init.vim
     [xmonad]="$HOME"/.xmonad/xmonad.hs
     [vifm]="$HOME"/.config/vifm/vifmrc
+    [zathura]="$HOME"/.config/zathura/zathurarc
 )
 
 mapfile -t scripts < <(find "$HOME"/.local/bin -not -name 'dmenu*' -type f)
