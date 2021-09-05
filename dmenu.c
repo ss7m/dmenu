@@ -585,6 +585,44 @@ run(void)
 }
 
 static void
+monitor_adjust_xy(int *return_x, int *return_y)
+{
+        XRRScreenResources *r;
+        XRRCrtcInfo *info;
+        Window fwin, rwin;
+        int _n, f_x, f_y, c_x, c_y;
+        unsigned int f_w, f_h, _nn;
+
+        XGetInputFocus(dpy, &fwin, &_n);
+        XGetGeometry(dpy, fwin, &rwin, &f_x, &f_y, &f_w, &f_h, &_nn, &_nn);
+        c_x = (f_x + (f_x + f_w)) / 2;
+        c_y = (f_y + (f_y + f_h)) / 2;
+
+        // we're focused on root window
+        // choose monitor based on mouse position instead
+        if (rwin == fwin) {
+                XQueryPointer(
+                        dpy, rwin, &fwin, &fwin,
+                        &c_x, &c_y, &_n, &_n, &_nn
+                );
+        }
+
+        r = XRRGetScreenResources(dpy, DefaultRootWindow(dpy));
+        for (int i = 0; i < r->ncrtc; i++) {
+                int x2, y2;
+                info = XRRGetCrtcInfo(dpy, r, r->crtcs[i]);
+                x2 = info->x + info->width;
+                y2 = info->y + info->height;
+                if (c_x > info->x && c_x < x2
+                &&  c_y > info->y && c_y < y2) {
+                        *return_x += info->x;
+                        *return_y += info->y;
+                        return;
+                }
+        }
+}
+
+static void
 setup(void)
 {
 	int x, y;
@@ -610,6 +648,7 @@ setup(void)
                         parentwin);
         x = dmx;
         y = topbar ? dmy : wa.height - mh - dmy;
+        monitor_adjust_xy(&x, &y);
         mw = (dmw>0 ? dmw : (unsigned int) wa.width);
 	promptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;
 	inputw = MIN(inputw, mw/3);
