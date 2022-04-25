@@ -16,9 +16,6 @@ static const char *colors[SchemeLast][2] = {
 };
 /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
 static unsigned int lines      = 15;
-static unsigned int xoffset    = 1280;
-static unsigned int yoffset    = 720;
-static unsigned int width      = 1280;
 
 /*
  * Characters not considered part of a word while deleting words

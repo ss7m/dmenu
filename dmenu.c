@@ -585,7 +585,7 @@ run(void)
 }
 
 static void
-monitor_adjust_xy(int *return_x, int *return_y)
+get_window_dimensions(int *r_x, int *r_y, int *r_w)
 {
         XRRScreenResources *r;
         XRRCrtcInfo *info;
@@ -615,8 +615,9 @@ monitor_adjust_xy(int *return_x, int *return_y)
                 y2 = info->y + info->height;
                 if (c_x > info->x && c_x < x2
                 &&  c_y > info->y && c_y < y2) {
-                        *return_x += info->x;
-                        *return_y += info->y;
+                        *r_x = info->x + info->width / 3;
+                        *r_y = info->y + info->height / 3;
+                        *r_w = info->width / 3;
                         return;
                 }
         }
@@ -646,10 +647,12 @@ setup(void)
         if (!XGetWindowAttributes(dpy, parentwin, &wa))
                 die("could not get embedding window attributes: 0x%lx",
                         parentwin);
+
+        get_window_dimensions(&dmx, &dmy, &dmw);
         x = dmx;
         y = topbar ? dmy : wa.height - mh - dmy;
-        monitor_adjust_xy(&x, &y);
         mw = (dmw>0 ? dmw : (unsigned int) wa.width);
+        printf("%d; %d; %d\n", x, y, mw);
 	promptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;
 	inputw = MIN(inputw, mw/3);
 	match();
@@ -742,10 +745,6 @@ main(int argc, char *argv[])
 			embed = argv[++i];
 		else
 			usage();
-
-        if (dmx == 0) { dmx = xoffset; }
-        if (dmy == 0) { dmy = yoffset; }
-        if (dmw == 0) { dmw = width; }
 
 	if (!setlocale(LC_CTYPE, "") || !XSupportsLocale())
 		fputs("warning: no locale support\n", stderr);
