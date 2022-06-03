@@ -652,6 +652,7 @@ setup(void)
         x = dmx;
         y = topbar ? dmy : wa.height - mh - dmy;
         mw = (dmw>0 ? dmw : (unsigned int) wa.width);
+        printf("%d; %d; %d\n", x, y, mw);
 	promptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;
 	inputw = MIN(inputw, mw/3);
 	match();
